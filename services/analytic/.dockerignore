@@ -1,0 +1,12 @@
+**/.git
+**/.gitignore
+**/testdata
+**/test.sh
+**/*_test.go
+**/README.md
+**/Makefile
+deploy/
+docs/
+scripts/
+.vscode/
+.DS_Store

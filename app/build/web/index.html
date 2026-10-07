@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Financial metrics PWA dashboard for BIST market analysis" />
+    <meta name="theme-color" content="#0d47a1" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" href="/icons/icon-192x192.png" />
+    <title>neyialiyorlar</title>
+    <script>
+      const serviceWorkerVersion = "3531437529";
+      var scriptLoaded = false;
+      function loadMainDartJs() {
+        if (scriptLoaded) {
+          return;
+        }
+        scriptLoaded = true;
+        var scriptTag = document.createElement('script');
+        scriptTag.src = 'main.dart.js';
+        scriptTag.type = 'application/javascript';
+        document.body.append(scriptTag);
+      }
+
+      if ('serviceWorker' in navigator) {
+        // The value of `serviceWorkerVersion` is injected by our build process when
+        // creating a production build that will be deployed to production servers.
+        // Leave this line as is if you want to make your app installable and work offline.
+        navigator.serviceWorker.register('service_worker.js').then(function (reg) {
+          function waitForActivation(serviceWorker) {
+            serviceWorker.addEventListener('statechange', function () {
+              if (serviceWorker.state == 'activated') {
+                console.log('[ServiceWorker] Activated and ready for offline');
+              }
+            });
+          }
+          if (!reg.active && (reg.installing || reg.waiting)) {
+            waitForActivation(reg.installing || reg.waiting);
+          } else if (reg.active) {
+            console.log('[ServiceWorker] Already active');
+          }
+        }).catch(function (error) {
+          console.error('[ServiceWorker] Registration failed:', error);
+        });
+      }
+
+      window.addEventListener('load', function() {
+        loadMainDartJs();
+      });
+    </script>
+  </head>
+  <body>
+    <script>
+      window.flutterPlafformChannelReady  = function() {};
+    </script>
+  </body>
+</html>

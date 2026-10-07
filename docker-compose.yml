@@ -1,0 +1,370 @@
+name: neyialiyorlar
+
+x-labels: &svc-labels
+  com.neyialiyorlar.project: "neyialiyorlar"
+  com.neyialiyorlar.env: "dev"
+
+networks:
+  edge:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true
+
+volumes:
+  pgdata: {}
+  redisdata: {}
+  rawblob: {}
+  flutter_build: {}
+  ollama-models: {}
+
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "edge-proxy"
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx/neyialiyorlar.local.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/nginx/certs:/etc/nginx/certs:ro
+      - flutter_build:/usr/share/nginx/html:ro
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/healthz >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    mem_limit: 64m
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - edge
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  api:
+    build:
+      context: ./services
+      dockerfile: api/Dockerfile
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "api-gateway"
+    restart: unless-stopped
+    env_file:
+      - ./deploy/env/api.env
+    volumes:
+      - ./config/neyialiyorlar.yaml:/etc/neyialiyorlar/neyialiyorlar.yaml:ro
+      - ./config/neyialiyorlar.yaml:/etc/neyi/config.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/api", "-healthcheck"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    mem_limit: 128m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - edge
+      - backend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  harvester:
+    build:
+      context: ./services
+      dockerfile: harvester/Dockerfile
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "ingestion"
+    restart: unless-stopped
+    env_file:
+      - ./deploy/env/harvester.env
+    volumes:
+      - ./config/neyialiyorlar.yaml:/etc/neyi/config.yaml:ro
+      - ./config/neyialiyorlar.yaml:/etc/neyialiyorlar/neyialiyorlar.yaml:ro
+      - rawblob:/var/neyi/raw
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/harvester", "-healthcheck"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    mem_limit: 192m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - backend
+      - edge
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  analytic:
+    build:
+      context: ./services
+      dockerfile: analytic/Dockerfile
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "analytics"
+    restart: unless-stopped
+    env_file:
+      - ./deploy/env/analytic.env
+    volumes:
+      - ./config/neyialiyorlar.yaml:/etc/neyi/config.yaml:ro
+      - ./config/neyialiyorlar.yaml:/etc/neyialiyorlar/neyialiyorlar.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/analytic", "-healthcheck"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    mem_limit: 192m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - backend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  postgres:
+    image: postgres:16-alpine
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "primary-db"
+    restart: unless-stopped
+    env_file:
+      - ./deploy/env/postgres.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./deploy/postgres/01-init-users.sql:/docker-entrypoint-initdb.d/01-init-users.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    mem_limit: 256m
+    networks:
+      - backend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  migrate:
+    image: migrate/migrate:v4.17.1
+    profiles:
+      - tools
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "db-migrate"
+    env_file:
+      - ./deploy/env/postgres.env
+    volumes:
+      - ./services/db/migrations:/migrations:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:7-alpine
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "cache-bus"
+    restart: unless-stopped
+    command:
+      - redis-server
+      - /usr/local/etc/redis/redis.conf
+    volumes:
+      - redisdata:/data
+      - ./deploy/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    mem_limit: 320m
+    networks:
+      - backend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  research:
+    build:
+      context: ./research
+    profiles:
+      - research
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "research-sidecar"
+    env_file:
+      - ./deploy/env/research.env
+    volumes:
+      - ./config/neyialiyorlar.yaml:/app/config/neyialiyorlar.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Local LLM runtime for the fund-scraper's AI PDF-fallback parser. CPU-only
+  # by default. On `backend` so the scraper reaches it at ollama:11434, and on
+  # `edge` so it can pull models from the internet (`backend` is internal-only).
+  # Published to localhost only — never exposed on the LAN.
+  ollama:
+    image: ollama/ollama
+    profiles:
+      - fund-scraper
+    restart: unless-stopped
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "ollama"
+    volumes:
+      - ollama-models:/root/.ollama
+    ports:
+      - "127.0.0.1:11434:11434"
+    networks:
+      - backend
+      - edge
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  fund-scraper:
+    build:
+      context: ./services/fund-scraper
+    profiles:
+      - fund-scraper
+    restart: on-failure
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "fund-scraper"
+    env_file:
+      - ./deploy/env/fund-scraper.env
+    environment:
+      - RESCAN_INTERVAL_H=24
+      # KAP 6AB disclosure indices are NOT on a mod-N grid: SCAN_STEP must be 1
+      # or most funds are silently skipped (step=3 misses ~2/3). The range
+      # covers the H1-2025 pension-fund cluster; widen as new half-year filings
+      # land. The scan is resumable (scraper_scan_cache + scraper_checkpoint).
+      - SCAN_STEP=1
+      - SCAN_START=1474000
+      - SCAN_END=1477000
+      # AI PDF fallback parser. When the deterministic regex parser can't read a
+      # fund's portfolio-PDF layout, the scraper asks the local Ollama service
+      # to extract the holdings, then validates every ticker against the known
+      # BIST universe. It self-disables when Ollama is unreachable, so this is
+      # safe to leave on. The `ollama` service (same profile) provides it.
+      - AI_PARSER_ENABLED=1
+      - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_MODEL=llama3.1
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import psycopg,sys,os; conn=psycopg.connect(os.environ.get('DATABASE_URL','host=postgres dbname=neyialiyorlar user=postgres')); cur=conn.cursor(); cur.execute(\\\"SELECT status, EXTRACT(EPOCH FROM (NOW()-updated_at)) AS age FROM scraper_progress ORDER BY started_at DESC LIMIT 1\\\"); row=cur.fetchone(); sys.exit(0 if row is None or row[0]!='running' or row[1]<600 else 1)\""]
+      interval: 5m
+      timeout: 15s
+      retries: 2
+      start_period: 2m
+    networks:
+      - backend
+      - edge
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    shm_size: "256m"
+
+  flutter-build:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+      args:
+        FLUTTER_VERSION: "3.22.0"
+    profiles:
+      - flutter-build
+    labels:
+      <<: *svc-labels
+      com.neyialiyorlar.role: "flutter-builder"
+    volumes:
+      - flutter_build:/usr/share/nginx/html
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

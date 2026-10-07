@@ -1,0 +1,1 @@
+ /home/tech/code/neyialiyorlar/app/build/web/service_worker.js /home/tech/code/neyialiyorlar/app/build/web/manifest.json:  /home/tech/code/neyialiyorlar/app/web/index.html /home/tech/code/neyialiyorlar/app/web/service_worker.js /home/tech/code/neyialiyorlar/app/web/manifest.json

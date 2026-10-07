@@ -1,0 +1,89 @@
+ts_utc,run_id,agent,scope,action,status,summary,refs,commit_sha
+2026-06-20T12:22:24Z,roadmap-neyi-20260620,copilot,roadmap,plan,completed,plan: neyialiyorlar 6-phase technical roadmap + design/ADR set,docs/planning/ROADMAP.md;docs/project/CHARTER.md;docs/design/DATA_SOURCES.md;docs/design/METRICS_CATALOG.md,
+2026-06-20T12:22:34Z,roadmap-neyi-20260620,copilot,roadmap,commit,completed,docs(roadmap): add neyialiyorlar technical implementation roadmap and design set,docs/planning/ROADMAP.md;docs/project/CHARTER.md;docs/project/GLOSSARY.md;docs/design/DATA_SOURCES.md;docs/design/METRICS_CATALOG.md;ai/context.md,pending
+2026-06-20T12:56:22Z,run-20260620125622-360590,copilot,roadmap,commit,completed,"docs(roadmap): comprehensive revision — 4 new mandates, 28 new deliverables, 6 enriched phases",docs/planning/ROADMAP.md,pending
+2026-06-20T16:40:29Z,roadmap-neyi-rev-20260620,copilot,roadmap,commit,completed,"docs(roadmap): revise all 6 phases — fix wrong assumptions, add mandates 15-21, harden proof tests",docs/planning/ROADMAP.md,pending
+2026-06-20T16:46:56Z,roadmap-neyi-norobots-20260620,copilot,roadmap,commit,completed,"docs(roadmap): drop robots.txt respect for experimental/dev use; add experimental note, keep load self-limiting + no-evasion",docs/planning/ROADMAP.md,pending
+2026-06-21T11:11:07Z,roadmap-neyi-enrich-20260621,copilot,roadmap,commit,completed,"docs(roadmap): enrich all 6 phases — add mandates 22-26 and 37 deliverables for locale/identity/return integrity, concurrency + supply-chain hardening, and proof tests",docs/planning/ROADMAP.md,pending
+2026-06-21T11:32:31Z,roadmap-neyi-enrich-20260621,copilot,roadmap,commit,completed,"docs(roadmap): clarify mandate 22 — full Turkish alphabet (ç ğ ı İ ö ş ü) folds via language.Turkish; İ/ı locale-special, Ş/ş round-trip tested",docs/planning/ROADMAP.md,pending
+2026-06-21T12:44:59Z,run-20260621124459-162862,copilot,framework-sync,commit,completed,"refactor(framework): sync framework v1.0.0; ai/ -> docs/tracking/, chatmodes -> agents, mode -> agent",docs/tracking/;.github/agents/;.github/prompts/;.agents/skills/;AGENTS.md;README.md,pending
+2026-06-21T13:04:30Z,run-20260621130430-195752,copilot,skills,commit,completed,docs(skills): add codegraph-management skill; expand MCP_SETUP with index management + troubleshooting,.agents/skills/codegraph-management/SKILL.md;.agents/skills/README.md;.agents/skills/mcp-usage/SKILL.md;docs/guides/MCP_SETUP.md,pending
+2026-06-23T13:22:54Z,run-20260623132254-411158,human,phase-1,commit,completed,"feat(phase-1): local env setup, docker compose, and go services",,pending
+2026-06-23T13:28:22Z,run-20260623132822-422510,human,phase-2,commit,completed,"feat(harvester): add httpx client with backoff, circuit breaker, load limiting",,pending
+2026-06-23T13:30:38Z,run-20260623133038-428116,human,phase-2,commit,completed,feat(harvester): add Turkish locale parser and envelope shape validator,,pending
+2026-06-23T13:32:28Z,run-20260623133228-433032,human,phase-2,commit,completed,feat(harvester): add raw store with content-hash dedup and quarantine,,pending
+2026-06-23T13:33:57Z,run-20260623133357-437359,human,phase-2,commit,completed,feat(harvester): add multi-cadence scheduler for data ingestion,,pending
+2026-06-23T13:40:00Z,run-20260623134000-454864,human,phase-2,commit,completed,"feat(harvester): add cursor persistence, DOM/PDF parsers, and source adapter framework",,pending
+2026-06-23T13:42:31Z,run-20260623134231-462157,human,phase-2,commit,completed,feat(harvester): add BIST calendar and KAP/EVDS source adapters,,pending
+2026-06-23T13:44:15Z,run-20260623134415-466715,human,phase-2,commit,completed,feat(harvester): add quarantine replay logic and dead-letter handling,,pending
+2026-06-23T13:50:10Z,run-20260623135010-476730,human,phase-2,commit,completed,feat(harvester): add MKK/VAP adapter for Turkish fund HTML reports,,pending
+2026-06-23T13:51:26Z,run-20260623135126-480365,human,phase-2,commit,completed,feat(harvester): add structured slog logging for ingestion events,,pending
+2026-06-23T13:52:47Z,run-20260623135247-483849,human,phase-2,commit,completed,feat(harvester): add graceful SIGTERM shutdown with drain and flush,,pending
+2026-06-23T13:53:41Z,run-20260623135341-485873,human,phase-2,commit,completed,"test(harvester): add Turkish-aware label anchor tests (I/ı, Ş/ş pairs)",,pending
+2026-06-23T13:54:27Z,run-20260623135427-487782,human,phase-2,commit,completed,test(harvester): add go-fuzz targets for envelope/DOM/numTr parsers,,pending
+2026-06-23T13:56:13Z,run-20260623135613-491808,human,phase-2,commit,completed,test(harvester): add calendar horizon guard and load self-limit proof tests,,pending
+2026-06-23T13:58:33Z,run-20260623135833-497373,human,phase-2,commit,completed,feat(harvester): spike and pin ledongthuc/pdf for PDF text extraction; record ADR-0005,,pending
+2026-06-23T13:59:48Z,run-20260623135948-500755,human,phase-2,commit,completed,"feat(harvester): add stable entity identity mapping (ISIN/MKK/ticker preference, ticker-rename test)",,pending
+2026-06-23T14:01:02Z,run-20260623140102-504004,human,phase-2,commit,completed,"feat(harvester): add corporate action capture (bedelli/bedelsiz, splits, dividends, renames, effective dates)",,pending
+2026-06-23T14:04:47Z,run-20260623140447-512908,human,phase-2,commit,completed,"test(harvester): add outbound client HTTPS-only, bounded redirects, and source-host allowlist security tests",,pending
+2026-06-23T14:04:52Z,run-20260623140452-513057,human,phase-2,commit,completed,"test(harvester): add Retry-After honour tests (supersedes backoff, numeric + HTTP-date parsing, no robots.txt, no evasion)",,pending
+2026-06-23T14:04:57Z,run-20260623140457-513204,human,phase-2,commit,completed,"test(harvester): add untrusted-input hardening comprehensive edge-case tests (max_payload_bytes, decompression_ratio bomb, parse_timeout_ms, max_pdf_pages)",,pending
+2026-06-23T14:05:02Z,run-20260623140502-513352,human,phase-2,commit,completed,"test(harvester): add quarantine poison control tests (max_replay_attempts -> dead-letter, health tile visibility, idempotent replay)",,pending
+2026-06-23T14:13:01Z,run-20260623141301-533056,human,general,commit,completed,"feat(analytic): implement kernels (ratio, delta, zscore, rolling, overlap) with comprehensive unit tests (61 cases)",,pending
+2026-06-23T14:15:00Z,run-20260623141500-537745,human,general,commit,completed,feat(analytic): implement Metric interface and all 10 metrics (m01-m10) with registry,,pending
+2026-06-23T14:16:53Z,run-20260623141653-542998,human,general,commit,completed,feat(analytic): implement recompute idempotent upsert and gap row semantics (13 unit tests),,pending
+2026-06-23T14:19:26Z,run-20260623141926-548516,human,general,commit,completed,feat(analytic): implement ingestwatch and scheduler packages with cadence-aware dispatch (16 unit tests),,pending
+2026-06-23T14:22:27Z,run-20260623142227-553794,human,general,commit,completed,feat(analytic): wire hybrid recompute model in main.go (event-driven + cadence fallback),,pending
+2026-06-23T14:24:58Z,run-20260623142458-558138,human,general,commit,completed,feat(analytic): add numerical-integrity guard (bullet 12) with 7 unit tests,,pending
+2026-06-23T14:25:58Z,run-20260623142558-560166,human,general,commit,completed,feat(analytic): implement deterministic computation with 3 unit tests (bullet 14),,pending
+2026-06-23T14:27:11Z,run-20260623142711-562418,human,general,commit,completed,feat(analytic): implement golden-file tests for metrics (bullet 7) with 4 test cases,,pending
+2026-06-23T14:29:16Z,run-20260623142916-565531,human,general,commit,completed,feat(analytic): add structured logging slog to recompute engine (bullet 11),,pending
+2026-06-23T14:32:03Z,run-20260623143203-573371,human,general,commit,completed,"feat(analytic): implement remaining bullets 13,15,16,17,19,20 with stubs and phase-4 integration points",,pending
+2026-06-23T14:40:57Z,run-20260623144057-587836,human,general,commit,completed,"feat(db): phase 4 schema with enums, derived tables, and migration tooling",,pending
+2026-06-23T14:42:04Z,run-20260623144204-589286,human,general,commit,completed,feat(phase-4): database schema & redis caching topology complete (all 20 deliverables),,pending
+2026-06-23T14:52:26Z,run-20260623145226-603796,human,general,commit,completed,feat(phase5): complete API core + WS foundation + Flutter scaffold,,pending
+2026-06-23T14:59:42Z,run-20260623145942-613375,human,general,commit,completed,"feat(phase5): complete service worker, stream-per-metric, flutter-build, ws tests, goldens",,pending
+2026-06-23T15:05:41Z,run-20260623150541-622776,human,general,commit,completed,feat(phase-6): add IC gate config with pre-registered thresholds for all 10 metrics,,pending
+2026-06-23T15:07:08Z,run-20260623150708-624557,human,general,commit,completed,feat(phase-6): python environment setup with pyproject.toml + make ic.run targets,,pending
+2026-06-23T15:11:32Z,run-20260623151132-630343,human,general,commit,completed,feat(phase-6): IC harness core + forward returns builder + make targets,,pending
+2026-06-23T15:14:12Z,run-20260623151412-633433,human,general,commit,completed,"feat(phase-6): unit specs + TDD framework (test_ic_gate, test_calendar, test_forward_returns)",,pending
+2026-06-23T15:15:25Z,run-20260623151525-634811,human,general,commit,completed,feat(phase-6): identity join + survivorship checks + reproducibility metadata,,pending
+2026-06-23T15:20:52Z,run-20260623152052-641599,human,general,commit,completed,"feat(phase-6): final deliverables - testing framework, benchmarks, HAC, multiple-testing, BIST calendar",,pending
+2026-06-23T15:27:21Z,run-20260623152721-649650,human,Flutter: Fix all analyzer errors,commit,completed,fix(flutter): resolve all 95 analyzer errors in app,,pending
+2026-06-23T15:29:43Z,run-20260623152943-652729,human,Dockerfile,commit,completed,fix(research): simplify Dockerfile comments and formatting,,pending
+2026-06-23T15:42:49Z,run-20260623154249-675430,copilot,Phase 5,commit,completed,feat(phase-5): implement REST API client endpoints + WebSocket integration,,pending
+2026-06-23T15:58:23Z,run-20260623155823-693723,copilot,Phase 6,commit,completed,feat(phase-6): IC gate harness with promotion_ledger + identity-correct joins,,pending
+2026-06-23T16:11:38Z,run-20260623161138-715912,human,test,commit,completed,fix(test): resolve API handler test compilation errors,services/api/internal/handler/metrics_test.go,pending
+2026-06-23T19:35:46Z,run-20260623193546-960369,human,general,commit,completed,docs(web): update phase status to reflect all 6 phases complete and Flutter PWA operational,,pending
+2026-06-23T19:46:06Z,run-20260623194606-980217,human,general,commit,completed,"feat(app,deploy): build and deploy Flutter PWA with corrected API endpoints",,pending
+2026-06-23T21:19:26Z,run-20260623211926-1137999,copilot,app-goldens,note,completed,golden tests fail: missing baseline PNGs in app/test/goldens (host flutter 3.38 vs pinned 3.22 build env); regenerate under pinned env before relying on them,app/test/widgets/flag_badge_golden_test.dart,
+2026-06-23T21:19:26Z,run-20260623211926-1138023,copilot,websocket,commit,completed,"fix(api,app): deliver live websocket metric ticks (block ServeWS on conn-scoped ctx; drop late _channel)",services/api/internal/handler/websocket.go;services/api/internal/handler/websocket_test.go;app/lib/core/api/websocket.dart,pending
+2026-06-23T22:03:13Z,run-20260623220313-1210168,copilot,stocks,commit,completed,feat(stocks): live monitored-stocks list with per-stock metric detail and fund membership,,pending
+2026-06-24T08:30:07Z,run-20260624083007-40273,copilot,i18n-fix-perf,commit,completed,"feat(api,app): Turkish UI with tooltips, stock search, fix cadence_tier errors, HTML renderer for Firefox",,pending
+2026-06-24T09:15:41Z,run-20260624091541-122239,copilot,bist-universe-signals,commit,completed,"feat(api,app,harvester): disable synthetic, 344 BIST entities, Yahoo price fetch, MA5/MA20 signal, fund holdings UI",,pending
+2026-06-24T10:28:55Z,run-20260624102855-216606,human,metrics-price-close,commit,completed,"fix(api,app,config): add price_close to metric catalogue; show Kapanış Fiyatı in stock detail metric grid",,pending
+2026-06-24T12:00:10Z,run-20260624120010-323701,human,dashboard-redesign,commit,completed,"feat(app,api): live ticker strip, top-movers dashboard, GetMetricTop endpoint",,pending
+2026-06-24T12:09:33Z,run-20260624120933-336153,human,labels,commit,completed,"fix(app): rename fund→index labels; basket chip, primary-index row, memberships card",,pending
+2026-06-24T12:26:33Z,run-20260624122633-356376,human,stock-detail,commit,completed,fix(app): show index membership chips in info card for every stock,,pending
+2026-06-24T13:00:49Z,run-20260624130049-403785,human,fund-holdings,commit,completed,"feat(app,api,infra): TEFAS+KAP fund holdings pipeline: scraper, DB, API, Flutter UI",,pending
+2026-06-24T16:06:19Z,run-20260624160619-667067,human,fund-scraper,commit,completed,feat(fund-scraper): rewrite to scrape KAP Altı Aylık Rapor FPD PDFs for individual stock holdings,,pending
+2026-06-24T17:08:35Z,run-20260624170835-823365,human,app,commit,completed,"feat(app): modern UI, remove Investigate/Fonlar, plain-language terms, SelectionArea, PWA meta, emoji logging",,pending
+2026-06-24T17:44:07Z,run-20260624174407-880093,copilot,local-dev,commit,completed,feat(infra): automate mkcert install + /etc/hosts + trusted TLS certs via setup.local,,pending
+2026-06-24T17:49:31Z,run-20260624174931-887107,copilot,local-dev,commit,completed,"feat(infra): cross-browser TLS trust — Chrome/Edge NSS DB, WSL2 Windows store, Windows setup-local.ps1",,pending
+2026-06-25T10:53:57Z,run-20260625105357-42818,copilot,app,commit,completed,"feat(app): watchlist, top-50 volatile home, fund tap fix, Firefox XHR fix",,pending
+2026-06-25T12:10:32Z,run-20260625121032-161914,copilot,"app,api,fund-scraper",commit,completed,"feat(app): monitoring panel, scraper watchdog+DB cache, pretty Go logging, fund coverage",,pending
+2026-06-26T10:38:33Z,run-20260626103833-214187,copilot,db,commit,completed,fix(db): add 0002 fund-holdings migration so funds list for a stock,services/db/migrations/0002_fund_holdings.up.sql;services/api/internal/handler/funds_test.go,pending
+2026-06-26T11:10:33Z,run-20260626111033-251101,copilot,make,commit,completed,build(make): add host.add target to map neyialiyorlar.local for local browser access,Makefile;scripts/setup-hosts.sh,pending
+2026-06-26T12:33:36Z,run-20260626123336-388376,copilot,"app,api,config",commit,completed,"feat(app,api): add İzleme Paneli live event feed and show only real fetched entities",services/api/internal/handler/admin_events.go;app/lib/screens/admin_screen.dart;config/neyialiyorlar.yaml,pending
+2026-06-26T14:10:17Z,run-20260626141017-512666,copilot,fund-scraper,commit,completed,feat(fund-scraper): add BIST universe ingester and local-Ollama AI PDF fallback,,pending
+2026-06-26T15:57:54Z,run-20260626155754-650068,copilot,fund-scraper,commit,completed,fix(fund-scraper): discover monthly portfolio reports for broad fund coverage,services/fund-scraper/fund_scraper.py;services/fund-scraper/test_fund_scraper.py,pending
+2026-06-26T17:17:06Z,run-20260626171706-756936,copilot,"api,app",commit,completed,"feat(api,app): label stocks by fund coverage count on entities list",,pending
+2026-06-26T17:58:23Z,run-20260626175823-812141,copilot,db,commit,completed,fix(db): seed XU030/XU100 basket membership so index stocks stop showing Endeks disi,,pending
+2026-06-26T17:58:23Z,run-20260626175823-812165,copilot,app,commit,completed,feat(app): rank homepage stocks by fund coverage instead of daily velocity,,pending
+2026-06-26T17:58:23Z,run-20260626175823-812191,copilot,docs,commit,completed,docs(reports): add data-sources and processing report,,pending
+2026-06-26T18:07:14Z,run-20260626180714-823104,copilot,fund-scraper,commit,completed,test(fund-scraper): lock in fetch-once checkpoint and scan-range skip,,pending
+2026-06-26T18:07:14Z,run-20260626180714-823125,copilot,docs,commit,completed,docs(reports): add ollama ai parser report,,pending
+2026-06-26T18:29:07Z,run-20260626182907-862295,copilot,harvester,commit,completed,feat(harvester): detect source schema/DOM drift and escalate confidence,,pending
+2026-06-26T18:29:14Z,run-20260626182914-862559,copilot,harvester,note,completed,"BIST/EVDS skeleton adapters have misconfigured envelope required fields (top-level keys vs nested data[]); out of drift scope, left for adapter completion",services/harvester/internal/source/bist.go;services/harvester/internal/source/evds.go,
+2026-06-26T18:56:25Z,run-20260626185625-903714,copilot,presence,commit,completed,feat(presence): add real-time fund-presence endpoint and live chart,services/api/internal/handler/presence.go;app/lib/widgets/presence_chart.dart,pending
+2026-06-26T19:27:02Z,run-20260626192702-951789,copilot,drift,commit,completed,feat(drift): persist breaking drift alerts and surface on monitoring panel,services/db/migrations/0005_drift_alert.up.sql;services/harvester/internal/store/drift.go;services/api/internal/handler/drift.go;app/lib/screens/admin_screen.dart,pending

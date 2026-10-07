@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="BIST hisse analiz paneli — gerçek zamanlı metrikler" />
+    <meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#1565c0" media="(prefers-color-scheme: light)" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="neyialiyorlar" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" href="/icons/icon-192x192.png" />
+    <title>neyialiyorlar</title>
+    <style>
+      /* Reset & text-selection fix for all browsers */
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        /* Allow native text selection everywhere */
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+        /* Prevent tap highlight flash on mobile */
+        -webkit-tap-highlight-color: transparent;
+        /* Smooth font rendering */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      /* Prevent 300ms tap delay on all browsers */
+      body { touch-action: manipulation; }
+      /* Loading splash — dark bg to avoid white flash */
+      body { background-color: #0d1117; }
+      /* Remove outline on Flutter canvas (keyboard navigation handled inside Flutter) */
+      flt-glass-pane { outline: none !important; }
+    </style>
+    <script>
+      var serviceWorkerVersion = null;
+      var scriptLoaded = false;
+      function loadMainDartJs() {
+        if (scriptLoaded) return;
+        scriptLoaded = true;
+        var scriptTag = document.createElement('script');
+        scriptTag.src = 'main.dart.js';
+        scriptTag.type = 'application/javascript';
+        document.body.append(scriptTag);
+      }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service_worker.js').then(function(reg) {
+          function waitForActivation(sw) {
+            sw.addEventListener('statechange', function() {
+              if (sw.state === 'activated') loadMainDartJs();
+            });
+          }
+          if (!reg.active && (reg.installing || reg.waiting)) {
+            waitForActivation(reg.installing || reg.waiting);
+          } else {
+            loadMainDartJs();
+          }
+        }).catch(function() { loadMainDartJs(); });
+      } else {
+        window.addEventListener('load', loadMainDartJs);
+      }
+    </script>
+  </head>
+  <body>
+    <script>window.flutterPlatformChannelReady = function() {};</script>
+  </body>
+</html>

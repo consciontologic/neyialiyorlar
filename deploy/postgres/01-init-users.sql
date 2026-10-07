@@ -1,0 +1,10 @@
+-- Create non-root user for application access
+CREATE USER neyi WITH PASSWORD 'dev_password';
+
+-- Grant permissions on the database
+ALTER USER neyi WITH CREATEDB;
+GRANT CONNECT ON DATABASE neyialiyorlar TO neyi;
+GRANT USAGE ON SCHEMA public TO neyi;
+GRANT CREATE ON SCHEMA public TO neyi;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO neyi;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO neyi;

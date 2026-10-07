@@ -1,0 +1,11 @@
+date,entity_id,metric_key,value,flag
+2024-01-01,AAPL,nimvi,0.125,fresh
+2024-01-02,AAPL,nimvi,0.132,fresh
+2024-01-03,AAPL,nimvi,0.128,fresh
+2024-01-04,AAPL,nimvi,,gap
+2024-01-05,AAPL,nimvi,0.140,fresh
+2024-01-01,MSFT,nimvi,0.095,fresh
+2024-01-02,MSFT,nimvi,0.101,fresh
+2024-01-03,MSFT,nimvi,0.098,fresh
+2024-01-04,MSFT,nimvi,0.102,fresh
+2024-01-05,MSFT,nimvi,0.106,fresh

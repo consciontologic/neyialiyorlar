@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neyialiyorlar-research"
+version = "0.1.0"
+description = "Research sidecar: IC gate for metric promotion & forward-return analysis"
+requires-python = ">=3.11"
+authors = [{ name = "neyialiyorlar team" }]
+license = { text = "MIT" }
+
+dependencies = [
+    "pandas>=2.2.0",              # data manipulation + time series
+    "numpy>=1.26.0",              # numerical arrays
+    "scipy>=1.13.0",              # statistics (spearman, etc)
+    "statsmodels>=0.14.0",        # HAC (Newey-West) significance tests
+    "psycopg[binary]>=3.1.0",     # PostgreSQL adapter for metric_value + promotion_ledger
+    "redis>=5.0.0",               # Redis connection (optional: for streaming IC updates)
+    "python-dateutil>=2.8.0",     # date parsing + TZ-aware operations
+    "pyyaml>=6.0",                # config file parsing
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.9.0",
+    "ruff>=0.1.0",
+]
+
+[tool.setuptools]
+packages = ["ic_gate", "calendar", "returns", "utils", "tests"]
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

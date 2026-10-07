@@ -1,0 +1,360 @@
+openapi: 3.1.0
+info:
+  title: neyialiyorlar Financial Metrics API
+  version: v1
+  description: |
+    REST + WebSocket API for real-time financial metrics and dashboard data.
+
+    **Contract rules:**
+    - Every response includes a `flag` field (required): "fresh" | "stale" | "approx"
+    - `value` field is nullable (number | null); gap rows use null, never omitted
+    - All timestamps are ISO 8601 UTC (e.g. 2026-06-14T15:00:00Z)
+    - Versioned under /api/v1/; future breaking changes are additive, not silent
+
+  contact:
+    name: neyialiyorlar project
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local development server
+
+paths:
+  /metrics:
+    get:
+      summary: List all available metrics with current flags
+      operationId: listMetrics
+      tags:
+        - Metrics Catalog
+      responses:
+        '200':
+          description: List of metrics with current status
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - metrics
+                properties:
+                  metrics:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MetricInfo'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /metrics/{key}/latest:
+    get:
+      summary: Latest value for a metric
+      operationId: getMetricLatest
+      tags:
+        - Metrics Values
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Metric key (e.g. nimvi, velocity_accumulation)
+        - name: entity
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Entity/security identifier
+      responses:
+        '200':
+          description: Latest metric value with flag
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricValue'
+        '404':
+          description: Metric or entity not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /metrics/{key}/series:
+    get:
+      summary: Series window for charting
+      operationId: getMetricSeries
+      tags:
+        - Metrics Values
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Metric key
+        - name: entity
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Entity/security identifier
+        - name: win
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - '1d'
+              - '7d'
+              - '30d'
+              - '90d'
+          default: '30d'
+          description: Time window for the series
+      responses:
+        '200':
+          description: Series of metric values
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - metric
+                  - entity
+                  - window
+                  - points
+                properties:
+                  metric:
+                    type: string
+                  entity:
+                    type: string
+                  window:
+                    type: string
+                  points:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MetricValue'
+        '404':
+          description: Metric or entity not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /sources/health:
+    get:
+      summary: Health status of all data sources
+      operationId: getSourcesHealth
+      tags:
+        - Sources Health
+      responses:
+        '200':
+          description: Source health snapshot
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - sources
+                properties:
+                  sources:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SourceHealth'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /query:
+    post:
+      summary: Multi-metric matrix pull (B2B batch)
+      operationId: queryMetrics
+      tags:
+        - Metrics Values
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: Matrix of requested metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+        '413':
+          description: Payload too large (exceeds max_query_metrics)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Confidence:
+      type: string
+      enum:
+        - fresh
+        - stale
+        - approx
+      description: |
+        Data quality flag:
+        - **fresh**: current value from primary source, < staleness threshold
+        - **stale**: delayed or secondary source, past staleness threshold
+        - **approx**: proxy metric or degraded computation
+
+    MetricValue:
+      type: object
+      required:
+        - metric
+        - entity
+        - ts
+        - flag
+        - tier
+      properties:
+        metric:
+          type: string
+          description: Metric key (e.g. nimvi, velocity_accumulation)
+        entity:
+          type: string
+          description: Entity/security identifier
+        ts:
+          type: string
+          format: date-time
+          description: Observation timestamp (ISO 8601 UTC)
+        value:
+          type: number
+          nullable: true
+          description: Metric value; null for gap rows (never fabricated)
+        flag:
+          $ref: '#/components/schemas/Confidence'
+        tier:
+          type: string
+          enum:
+            - intraday
+            - daily
+            - weekly
+            - event
+          description: Metric cadence tier
+
+    MetricInfo:
+      type: object
+      required:
+        - key
+        - name
+        - flag
+        - tier
+      properties:
+        key:
+          type: string
+          description: Metric key identifier
+        name:
+          type: string
+          description: Human-readable metric name
+        flag:
+          $ref: '#/components/schemas/Confidence'
+        tier:
+          type: string
+          enum:
+            - intraday
+            - daily
+            - weekly
+            - event
+
+    SourceHealth:
+      type: object
+      required:
+        - source
+        - checked_at
+        - breaker_open
+        - consecutive_failures
+      properties:
+        source:
+          type: string
+          description: Source identifier (e.g. bist, kap, mkk_vap)
+        last_ok_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last successful fetch timestamp
+        checked_at:
+          type: string
+          format: date-time
+          description: Last health check timestamp
+        breaker_open:
+          type: boolean
+          description: Circuit breaker state
+        consecutive_failures:
+          type: integer
+          description: Count of consecutive failures
+
+    QueryRequest:
+      type: object
+      required:
+        - queries
+      properties:
+        queries:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required:
+              - metric
+              - entities
+            properties:
+              metric:
+                type: string
+                description: Metric key
+              entities:
+                type: array
+                minItems: 1
+                items:
+                  type: string
+                description: List of entity IDs
+
+    QueryResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricValue'
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
+        request_id:
+          type: string
+          description: Request ID for tracking
+        timestamp:
+          type: string
+          format: date-time

@@ -1,0 +1,218 @@
+version: 1
+
+runtime:
+  log_level: info
+  timezone: Europe/Istanbul
+
+database:
+  url: "postgres://neyi:dev_password@postgres:5432/neyialiyorlar?sslmode=disable"
+  host: postgres
+  port: 5432
+  name: neyialiyorlar
+  user: neyi
+  max_open_conns: 16
+  max_idle_conns: 8
+
+redis:
+  addr: redis:6379
+  db: 0
+
+http_client:
+  user_agent: "neyialiyorlar-research/0.1 (+local)"
+  max_concurrent_per_host: 2
+  timeout_ms: 15000
+  backoff:
+    base_ms: 500
+    factor: 2.0
+    max_ms: 60000
+    jitter: true
+    max_attempts: 5
+  circuit_breaker:
+    fail_threshold: 5
+    cooldown_ms: 120000
+    half_open_probes: 1
+
+sources:
+  bist:
+    enabled: true
+    base: "https://www.borsaistanbul.com"
+    cadence: daily
+    intraday_viop: true
+  kap:
+    enabled: true
+    base: "https://www.kap.org.tr"
+    cadence: intraday
+  mkk_vap:
+    enabled: true
+    base: "https://www.mkk.com.tr"
+    cadence: daily
+    foreign_detail_lag_days: 10
+  evds:
+    enabled: true
+    base: "https://evds2.tcmb.gov.tr"
+    cadence: daily
+    weekly_flow: true
+  waf_protected:
+    enabled: false
+
+# Schema/DOM drift detection. The harvester fingerprints each upstream payload
+# and records BREAKING structural changes (a required field removed or a field
+# retyped) to the drift_alert table, surfaced in the dedicated drift section of
+# the İzleme Paneli. Alerts persist until an operator/agent fixes the upstream
+# drift and resolves them (POST /api/v1/admin/drift/{id}/resolve). Set
+# enabled:false to turn off persistence (the detector then only logs). `sources`
+# documents which adapters are instrumented today.
+drift:
+  enabled: true
+  persist: true
+  sources:
+    - yahoo      # Yahoo Finance chart JSON — the price-ingestion backbone
+
+metrics:
+  - id: 1
+    key: velocity_accumulation
+    tier: event
+    color: proxy
+    priority: true
+  - id: 2
+    key: herding_index
+    tier: event
+    color: proxy
+    priority: true
+  - id: 3
+    key: basis_spread
+    tier: daily
+    color: proxy
+    priority: true
+  - id: 4
+    key: float_demand_ratio
+    tier: daily
+    color: proxy
+    priority: true
+  - id: 5
+    key: property_equity_ratio
+    tier: daily
+    color: core
+  - id: 6
+    key: foreign_accum_velocity
+    tier: weekly
+    color: core
+  - id: 7
+    key: mandate_expansion
+    tier: event
+    color: proxy
+    speculative: true
+  - id: 8
+    key: nimvi
+    tier: daily
+    color: core
+  - id: 9
+    key: kap_notification
+    tier: intraday
+    color: core
+  - id: 10
+    key: real_yield_divergence
+    tier: daily
+    color: core
+  - id: 11
+    key: price_close
+    tier: daily
+    color: core
+    priority: true
+
+# Synthetic dev-data engine (Phase A). Generates clearly-labelled `approx`
+# values so the full DB -> API -> WebSocket -> dashboard path is operational
+# before the real harvester (Phase 2) and analytic (Phase 3) pipelines land.
+# HONESTY: every value is flagged `approx`; the UI shows a "synthetic seed data"
+# banner. Set enabled:false to run against real data only (dashboard then empty
+# until ingestion is wired). The metric catalogue above drives what is seeded.
+synthetic:
+  enabled: false             # DISABLED: system operates on real data only
+  tick_interval_s: 15       # live recompute cadence (ignored when disabled)
+  history_points: 90        # backfilled points per metric/entity (ignored when disabled)
+  sources:
+    - bist
+    - kap
+    - mkk_vap
+    - evds
+  # entities: intentionally EMPTY. The monitored catalogue is built ONLY from
+  # real fetched/parsed data — entity_ref is populated by the fund-scraper from
+  # parsed KAP fund holdings and priced by the harvester. No hardcoded seed
+  # stocks (previously BANKS/GARAN/AKBNK/ISCTR/THYAO). With an empty DB the
+  # dashboard shows nothing until ingestion runs, by design.
+  entities: []
+
+cache:
+  ttl:
+    intraday_s: 60
+    daily_s: 3600
+    weekly_s: 21600
+
+# Phase 6: IC gate configuration (anti-data-snooping: pre-registered thresholds)
+# Thresholds committed BEFORE ic_gate.py is run for the first time.
+# Changing a threshold post-hoc must be recorded in promotion_ledger with notes: "threshold revised post-hoc"
+ic_gate:
+  min_backtest_days_daily: 60        # min trading days for daily/event metrics (1-5, 7-10)
+  min_backtest_weeks: 52              # min weeks for weekly metric (6)
+  max_sign_flips_rolling: 3           # > 3 IC sign flips in rolling window = fail gate
+
+  metrics:
+    velocity_accumulation:            # Metric 1
+      ic_threshold: 0.10
+      rolling_window_size: 20         # events
+      forward_horizon_days: null      # next disclosure period (variable)
+      forward_horizon_type: event
+
+    herding_index:                    # Metric 2
+      ic_threshold: 0.10
+      rolling_window_size: 20         # events
+      forward_horizon_days: 20        # trading days
+      forward_horizon_type: trading_days
+
+    basis_spread:                     # Metric 3
+      ic_threshold: 0.08
+      rolling_window_size: 40         # trading days
+      forward_horizon_days: 5
+      forward_horizon_type: trading_days
+
+    float_demand_ratio:               # Metric 4
+      ic_threshold: 0.08
+      rolling_window_size: 40         # trading days
+      forward_horizon_days: 20
+      forward_horizon_type: trading_days
+
+    property_equity_ratio:            # Metric 5
+      ic_threshold: 0.08
+      rolling_window_size: 40         # trading days
+      forward_horizon_days: 20
+      forward_horizon_type: trading_days
+
+    foreign_accum_velocity:           # Metric 6
+      ic_threshold: 0.10
+      rolling_window_size: 26         # weeks
+      forward_horizon_days: 28        # 4 weeks
+      forward_horizon_type: calendar_days
+
+    mandate_expansion:                # Metric 7
+      ic_threshold: 0.05
+      rolling_window_size: 20         # events
+      forward_horizon_days: null      # next disclosure period (variable)
+      forward_horizon_type: event
+
+    nimvi:                            # Metric 8
+      ic_threshold: 0.08
+      rolling_window_size: 40         # trading days
+      forward_horizon_days: 20
+      forward_horizon_type: trading_days
+
+    kap_notification:                 # Metric 9
+      ic_threshold: 0.06
+      rolling_window_size: 40         # trading days
+      forward_horizon_days: 5
+      forward_horizon_type: trading_days
+
+    real_yield_divergence:            # Metric 10
+      ic_threshold: 0.10
+      rolling_window_size: 40         # trading days
+      forward_horizon_days: 20
+      forward_horizon_type: trading_days

@@ -1,0 +1,40 @@
+{
+  "name": "neyialiyorlar",
+  "short_name": "neyialiyorlar",
+  "description": "Financial metrics PWA dashboard for BIST market analysis",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d47a1",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["finance", "productivity"],
+  "screenshots": [
+    {
+      "src": "/screenshots/wide-540x720.png",
+      "sizes": "540x720",
+      "form_factor": "wide",
+      "type": "image/png"
+    },
+    {
+      "src": "/screenshots/narrow-270x540.png",
+      "sizes": "270x540",
+      "form_factor": "narrow",
+      "type": "image/png"
+    }
+  ]
+}
