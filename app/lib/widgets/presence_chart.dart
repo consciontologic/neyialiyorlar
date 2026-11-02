@@ -169,9 +169,9 @@ class PresenceChart extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
+        color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.30)),
+        border: Border.all(color: color.withValues(alpha: 0.30)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -347,7 +347,7 @@ class _PresenceSparklinePainter extends CustomPainter {
       ..close();
     final areaPaint = Paint()
       ..style = PaintingStyle.fill
-      ..color = lineColor.withOpacity(0.12);
+      ..color = lineColor.withValues(alpha: 0.12);
     final linePaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2

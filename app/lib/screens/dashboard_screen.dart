@@ -13,8 +13,7 @@ class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
       appBar: AppBar(
         title: const Text(kAppTitle,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
@@ -66,7 +65,6 @@ class DashboardScreen extends ConsumerWidget {
         ],
       ),
     );
-  }
 }
 
 // ─── Live Ticker Strip ────────────────────────────────────────────────────────
@@ -206,7 +204,7 @@ class _MarketSummaryRow extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Expanded(
+        const Expanded(
           child: _SummaryChip(
             value: kLabelDailyData,
             label: 'Güncelleme',
@@ -251,7 +249,7 @@ class _SummaryChip extends StatelessWidget {
                         fontSize: 15, fontWeight: FontWeight.bold)),
                 Text(label,
                     style: TextStyle(
-                        fontSize: 10, color: cs.onSurface.withOpacity(0.5))),
+                        fontSize: 10, color: cs.onSurface.withValues(alpha: 0.5))),
               ],
             ),
           ),
@@ -299,13 +297,13 @@ class _WatchlistSection extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.star_outline_rounded,
-                    size: 14, color: cs.onSurface.withOpacity(0.4)),
+                    size: 14, color: cs.onSurface.withValues(alpha: 0.4)),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'Hisselerin yanındaki ★ simgesine dokunarak listeye ekleyin',
                     style: TextStyle(
-                        fontSize: 12, color: cs.onSurface.withOpacity(0.5)),
+                        fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5)),
                   ),
                 ),
               ],
@@ -394,7 +392,7 @@ class _TopHeldSection extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(kLabelMostHeldEmpty,
                     style: TextStyle(
-                        fontSize: 12, color: cs.onSurface.withOpacity(0.5))),
+                        fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5))),
               );
             }
             // Bars are scaled against the most-held stock at the top.
@@ -426,7 +424,7 @@ class _TopHeldSection extends StatelessWidget {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: cs.primary.withOpacity(0.12),
+                        color: cs.primary.withValues(alpha: 0.12),
                       ),
                       child: Text(
                         '${i + 1}',
@@ -458,7 +456,7 @@ class _TopHeldSection extends StatelessWidget {
                                   value: ratio,
                                   minHeight: 3,
                                   backgroundColor:
-                                      Colors.grey.withOpacity(0.12),
+                                      Colors.grey.withValues(alpha: 0.12),
                                   valueColor:
                                       AlwaysStoppedAnimation<Color>(cs.primary),
                                 ),
@@ -469,7 +467,7 @@ class _TopHeldSection extends StatelessWidget {
                                 _formatFundCodes(funds),
                                 style: TextStyle(
                                   fontSize: 10,
-                                  color: cs.onSurface.withOpacity(0.45),
+                                  color: cs.onSurface.withValues(alpha: 0.45),
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -493,7 +491,7 @@ class _TopHeldSection extends StatelessWidget {
                           kLabelFundsUnit,
                           style: TextStyle(
                               fontSize: 10,
-                              color: cs.onSurface.withOpacity(0.5)),
+                              color: cs.onSurface.withValues(alpha: 0.5)),
                         ),
                         const SizedBox(width: 4),
                         GestureDetector(

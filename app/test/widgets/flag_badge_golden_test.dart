@@ -6,8 +6,8 @@ import 'package:neyialiyorlar/widgets/flag_badge.dart';
 void main() {
   group('FlagBadge Golden Tests', () {
     testWidgets('FlagBadge fresh renders correctly', (tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(200, 100);
-      addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+      tester.view.physicalSize = const Size(200, 100);
+      addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         const MaterialApp(
@@ -26,8 +26,8 @@ void main() {
     });
 
     testWidgets('FlagBadge stale renders correctly', (tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(200, 100);
-      addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+      tester.view.physicalSize = const Size(200, 100);
+      addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         const MaterialApp(
@@ -46,8 +46,8 @@ void main() {
     });
 
     testWidgets('FlagBadge approx renders correctly', (tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(200, 100);
-      addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+      tester.view.physicalSize = const Size(200, 100);
+      addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         const MaterialApp(
@@ -66,8 +66,8 @@ void main() {
     });
 
     testWidgets('FlagBadge small size renders correctly', (tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(200, 100);
-      addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+      tester.view.physicalSize = const Size(200, 100);
+      addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         const MaterialApp(
@@ -91,8 +91,8 @@ void main() {
 
   group('Gap Rendering Golden Tests', () {
     testWidgets('Gap value renders as dash', (tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(120, 60);
-      addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+      tester.view.physicalSize = const Size(120, 60);
+      addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         const MaterialApp(
@@ -113,8 +113,8 @@ void main() {
     });
 
     testWidgets('Gap value is never interpolated', (tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(120, 60);
-      addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+      tester.view.physicalSize = const Size(120, 60);
+      addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         const MaterialApp(
@@ -134,8 +134,8 @@ void main() {
     });
 
     testWidgets('Present value renders correctly', (tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(120, 60);
-      addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+      tester.view.physicalSize = const Size(120, 60);
+      addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         const MaterialApp(
@@ -156,8 +156,8 @@ void main() {
     });
 
     testWidgets('Gap renders with distinct visual treatment', (tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(120, 60);
-      addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+      tester.view.physicalSize = const Size(120, 60);
+      addTearDown(tester.view.resetPhysicalSize);
 
       // Render gap and present side-by-side to verify distinct appearance
       await tester.pumpWidget(
@@ -192,10 +192,7 @@ void main() {
 
 /// Test widget for golden tests - renders DenseCell equivalent
 class DenseCellTest extends StatelessWidget {
-  const DenseCellTest({super.key,
-    required this.label,
-    required this.value,
-    required this.flag,
+  const DenseCellTest({required this.label, required this.value, required this.flag, super.key,
   });
   final String label;
   final double? value;

@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # Download and install Flutter (pinned version)
-ARG FLUTTER_VERSION=3.22.0
+ARG FLUTTER_VERSION=3.47.9
 RUN git clone --depth 1 --branch ${FLUTTER_VERSION} https://github.com/flutter/flutter.git /flutter
 
 ENV PATH="/flutter/bin:/flutter/bin/cache/dart-sdk/bin:${PATH}"

@@ -111,7 +111,7 @@ class _AdminScreenState extends ConsumerState<AdminScreen> {
               child: Text(
                 'Her 5 sn. otomatik yenilenir',
                 style: TextStyle(
-                    fontSize: 11, color: cs.onSurface.withOpacity(0.35)),
+                    fontSize: 11, color: cs.onSurface.withValues(alpha: 0.35)),
               ),
             ),
           ],
@@ -165,7 +165,7 @@ class _ScraperCard extends StatelessWidget {
                     run.runId,
                     style: TextStyle(
                         fontSize: 11,
-                        color: cs.onSurface.withOpacity(0.45),
+                        color: cs.onSurface.withValues(alpha: 0.45),
                         fontFamily: 'monospace'),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -197,21 +197,21 @@ class _ScraperCard extends StatelessWidget {
               Text(
                 'Son fon: ${run.lastFund}',
                 style: TextStyle(
-                    fontSize: 11, color: cs.onSurface.withOpacity(0.5)),
+                    fontSize: 11, color: cs.onSurface.withValues(alpha: 0.5)),
               ),
             ],
             const SizedBox(height: 4),
             Text(
               'Güncellendi: ${_timeAgo(run.updatedAt)}',
               style: TextStyle(
-                  fontSize: 10, color: cs.onSurface.withOpacity(0.35)),
+                  fontSize: 10, color: cs.onSurface.withValues(alpha: 0.35)),
             ),
           ] else ...[
             const Divider(height: 20),
             Text(
               'Henüz tarayıcı çalıştırılmadı.',
               style:
-                  TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.5)),
+                  TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5)),
             ),
           ],
         ],
@@ -260,7 +260,7 @@ class _EventsCard extends StatelessWidget {
               'Henüz arka uç etkinliği yok. Hasat / analiz / tarama '
               'çalıştığında olaylar burada belirir.',
               style:
-                  TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.5)),
+                  TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5)),
             )
           : Column(
               children: [
@@ -309,7 +309,7 @@ class _EventRow extends StatelessWidget {
                           horizontal: 5, vertical: 1),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        color: color.withOpacity(0.12),
+                        color: color.withValues(alpha: 0.12),
                       ),
                       child: Text(label,
                           style: TextStyle(
@@ -327,7 +327,7 @@ class _EventRow extends StatelessWidget {
                     Text(_timeAgo(event.ts),
                         style: TextStyle(
                             fontSize: 10,
-                            color: cs.onSurface.withOpacity(0.4))),
+                            color: cs.onSurface.withValues(alpha: 0.4))),
                   ],
                 ),
                 if (event.detail.isNotEmpty)
@@ -336,7 +336,7 @@ class _EventRow extends StatelessWidget {
                     child: Text(event.detail,
                         style: TextStyle(
                             fontSize: 11,
-                            color: cs.onSurface.withOpacity(0.6))),
+                            color: cs.onSurface.withValues(alpha: 0.6))),
                   ),
               ],
             ),
@@ -363,7 +363,7 @@ class _DriftAlertsCard extends StatelessWidget {
           ? Text(
               'Şema kayması algılanmadı. Kaynak veri yapıları kararlı.',
               style:
-                  TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.5)),
+                  TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5)),
             )
           : Column(
               children: [
@@ -390,8 +390,8 @@ class _DriftAlertRow extends ConsumerWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: accent.withOpacity(0.06),
-        border: Border.all(color: accent.withOpacity(0.35)),
+        color: accent.withValues(alpha: 0.06),
+        border: Border.all(color: accent.withValues(alpha: 0.35)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -402,7 +402,7 @@ class _DriftAlertRow extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
-                  color: accent.withOpacity(0.15),
+                  color: accent.withValues(alpha: 0.15),
                 ),
                 child: Text(badge,
                     style: TextStyle(
@@ -419,7 +419,7 @@ class _DriftAlertRow extends ConsumerWidget {
               ),
               Text(_timeAgo(alert.lastSeen),
                   style: TextStyle(
-                      fontSize: 10, color: cs.onSurface.withOpacity(0.4))),
+                      fontSize: 10, color: cs.onSurface.withValues(alpha: 0.4))),
             ],
           ),
           if (alert.summary.isNotEmpty)
@@ -427,7 +427,7 @@ class _DriftAlertRow extends ConsumerWidget {
               padding: const EdgeInsets.only(top: 4),
               child: Text(alert.summary,
                   style: TextStyle(
-                      fontSize: 11.5, color: cs.onSurface.withOpacity(0.75))),
+                      fontSize: 11.5, color: cs.onSurface.withValues(alpha: 0.75))),
             ),
           // Field-level diffs.
           if (alert.retyped.isNotEmpty)
@@ -447,7 +447,7 @@ class _DriftAlertRow extends ConsumerWidget {
             children: [
               Text('${alert.occurrences}× görüldü',
                   style: TextStyle(
-                      fontSize: 10.5, color: cs.onSurface.withOpacity(0.45))),
+                      fontSize: 10.5, color: cs.onSurface.withValues(alpha: 0.45))),
               TextButton.icon(
                 onPressed: () => _resolve(context, ref),
                 icon: const Icon(Icons.check_circle_outline, size: 16),
@@ -491,8 +491,7 @@ class _DiffLine extends StatelessWidget {
   final List<String> paths;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: const EdgeInsets.only(top: 3),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -512,7 +511,6 @@ class _DiffLine extends StatelessWidget {
         ],
       ),
     );
-  }
 }
 
 // ─── Shared widgets ───────────────────────────────────────────────────────────
@@ -576,12 +574,12 @@ class _CoverageBar extends StatelessWidget {
           children: [
             Text(label,
                 style: TextStyle(
-                    fontSize: 12, color: cs.onSurface.withOpacity(0.65))),
+                    fontSize: 12, color: cs.onSurface.withValues(alpha: 0.65))),
             Text('$value / $total',
                 style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: cs.onSurface.withOpacity(0.8))),
+                    color: cs.onSurface.withValues(alpha: 0.8))),
           ],
         ),
         const SizedBox(height: 4),
@@ -590,7 +588,7 @@ class _CoverageBar extends StatelessWidget {
           child: LinearProgressIndicator(
             value: ratio,
             minHeight: 6,
-            backgroundColor: color.withOpacity(0.1),
+            backgroundColor: color.withValues(alpha: 0.1),
             valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
         ),
@@ -621,7 +619,7 @@ class _StatChip extends StatelessWidget {
                   const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
           Text(label,
               style:
-                  TextStyle(fontSize: 9, color: cs.onSurface.withOpacity(0.5))),
+                  TextStyle(fontSize: 9, color: cs.onSurface.withValues(alpha: 0.5))),
         ],
       ),
     );
@@ -644,8 +642,8 @@ class _StatusChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: color.withOpacity(0.12),
-        border: Border.all(color: color.withOpacity(0.4)),
+        color: color.withValues(alpha: 0.12),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

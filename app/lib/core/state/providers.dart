@@ -121,7 +121,7 @@ final signalProvider =
 final topMoversProvider =
     FutureProvider.family<List<TopMover>, String>((ref, metricKey) async {
   final client = ref.watch(apiClientProvider);
-  return client.getTopMovers(metricKey, n: 15);
+  return client.getTopMovers(metricKey);
 });
 
 /// The [limit] securities held by the most funds, highest `fundCount` first.

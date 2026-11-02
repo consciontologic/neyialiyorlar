@@ -1,0 +1,8 @@
+# Flutter/Dart generated artifacts
+.dart_tool/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/

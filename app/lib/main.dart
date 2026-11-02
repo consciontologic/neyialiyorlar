@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
             border: OutlineInputBorder(),
           ),
         ),
-        themeMode: ThemeMode.system,
         // SelectionArea makes every Text in the whole app copy-pastable on web.
         builder: (context, child) => SelectionArea(child: child!),
         home: const DashboardScreen(),

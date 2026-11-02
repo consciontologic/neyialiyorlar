@@ -71,9 +71,9 @@ class MetricValueCard extends ConsumerWidget {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : current == null
-                            ? Text(
+                            ? const Text(
                                 kLabelNoData,
-                                style: const TextStyle(color: Colors.grey),
+                                style: TextStyle(color: Colors.grey),
                               )
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,

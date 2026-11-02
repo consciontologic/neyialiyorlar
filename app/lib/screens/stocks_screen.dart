@@ -98,8 +98,8 @@ class _StocksScreenState extends ConsumerState<StocksScreen> {
                 const SizedBox(height: 12),
                 _sectionLabel(kSectionStocks, stocks.length),
                 if (stocks.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(24),
+                  const Padding(
+                    padding: EdgeInsets.all(24),
                     child: Center(child: Text(kLabelNoResults)),
                   )
                 else
@@ -140,8 +140,7 @@ class _EntityTile extends ConsumerWidget {
   final MetricInfo? headline;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
+  Widget build(BuildContext context, WidgetRef ref) => Card(
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: ListTile(
         leading: CircleAvatar(
@@ -168,7 +167,6 @@ class _EntityTile extends ConsumerWidget {
         ),
       ),
     );
-  }
 
   /// Subtitle row: a has-funds / no-funds badge followed by the ISIN.
   Widget _subtitle() => Padding(
@@ -200,9 +198,9 @@ class _EntityTile extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withOpacity(0.4)),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

@@ -202,9 +202,9 @@ class StockDetailScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
+                color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: color.withOpacity(0.4)),
+                border: Border.all(color: color.withValues(alpha: 0.4)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -255,7 +255,6 @@ class StockDetailScreen extends ConsumerWidget {
 
   // ── Index membership row (always shown inside the info card) ────────────────
   Widget _indexMembershipRow(List<String> basketIds) => Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Icon(Icons.bar_chart, size: 16, color: Colors.grey),
           const SizedBox(width: 6),
@@ -282,8 +281,8 @@ class StockDetailScreen extends ConsumerWidget {
                             : Colors.blueGrey;
                 return Chip(
                   label: Text(label, style: const TextStyle(fontSize: 11)),
-                  backgroundColor: color.withOpacity(0.12),
-                  side: BorderSide(color: color.withOpacity(0.35)),
+                  backgroundColor: color.withValues(alpha: 0.12),
+                  side: BorderSide(color: color.withValues(alpha: 0.35)),
                   visualDensity: VisualDensity.compact,
                   padding: EdgeInsets.zero,
                 );
@@ -307,10 +306,10 @@ class StockDetailScreen extends ConsumerWidget {
             child: ExpansionTile(
               leading:
                   const Icon(Icons.account_balance_wallet_outlined, size: 20),
-              title: Text(
+              title: const Text(
                 kSectionFundHoldings,
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
               subtitle: Text(
                 '${funds.length} fon portföyünde yer alıyor',
@@ -355,8 +354,8 @@ class StockDetailScreen extends ConsumerWidget {
                           f.source.toUpperCase(),
                           style: const TextStyle(fontSize: 9),
                         ),
-                        backgroundColor: sourceColor.withOpacity(0.1),
-                        side: BorderSide(color: sourceColor.withOpacity(0.3)),
+                        backgroundColor: sourceColor.withValues(alpha: 0.1),
+                        side: BorderSide(color: sourceColor.withValues(alpha: 0.3)),
                         visualDensity: VisualDensity.compact,
                         padding: EdgeInsets.zero,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

@@ -101,7 +101,7 @@ class _InvestigateScreenState extends ConsumerState<InvestigateScreen> {
                             : kLabelDisabled),
                     _kv(kLabelMetricsCatalog, '${status.metricsCatalog}'),
                     const SizedBox(height: 8),
-                    Text(kLabelRowCounts,
+                    const Text(kLabelRowCounts,
                         style: TextStyle(fontWeight: FontWeight.w600)),
                     const SizedBox(height: 4),
                     ...status.counts.entries
@@ -263,7 +263,7 @@ class _InvestigateScreenState extends ConsumerState<InvestigateScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: SelectableText(
